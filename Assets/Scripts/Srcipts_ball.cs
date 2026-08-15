@@ -12,10 +12,12 @@ public enum Ballcolor
     Pink,
     Black,
 }
-public class Srciptsball : MonoBehaviour, IPointerClickHandler
+public class Ball : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
     private int point;
+
+    public int Point { get { return point; } set { point = value; } }
 
     [SerializeField]
     private Ballcolor color;
