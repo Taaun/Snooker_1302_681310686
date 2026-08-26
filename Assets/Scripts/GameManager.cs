@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,11 +24,19 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject BallLine;
 
+    [SerializeField]
+    private GameObject cam;
+
+    [SerializeField]
+    private TMP_Text notitext;
+
 
     public static GameManager instance;
 
     private void Start()
     {
+        camBehindCuaBall();
+
         SetBall(Ballcolor.Red, 1);
         SetBall(Ballcolor.Yellow, 2);
         SetBall(Ballcolor.Green, 3);
@@ -73,6 +82,11 @@ public class GameManager : MonoBehaviour
     {
         Rigidbody rd=cueBall.GetComponent<Rigidbody>();
         rd.AddRelativeForce(Vector3.forward * 50, ForceMode.Impulse);
+
+        BallLine.SetActive(false);
+        cam.transform.parent = null;
+        cam.transform.position = new Vector3(0f ,30f ,-42f);
+        cam.transform.eulerAngles = new Vector3(45f, 0f, 0f);
     }
 
     private void RotateBall()
@@ -83,12 +97,31 @@ public class GameManager : MonoBehaviour
 
     private void StopBall()
     {
-        Rigidbody rb =cueBall.GetComponent<Rigidbody>();
+        Rigidbody rb = cueBall.GetComponent<Rigidbody>();
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         cueBall.transform.eulerAngles = Vector3.zero;
 
         BallLine.SetActive(true);
+        camBehindCuaBall();
     }
 
+    private void camBehindCuaBall()
+    {
+        cam.transform.parent = cueBall.transform;
+        cam.transform.position = cueBall.transform.position + new Vector3(0f, 7f, -15f);
+        cam.transform.eulerAngles = new Vector3(30f, 0f, 0f);
+    }
+
+    public void ShowScoreText(int n)
+    {
+        playerScore += n;
+        notitext.text = $"Ball Point: {n}\nTotal Score: {playerScore}";
+
+    }
+
+    public void ShowString(string s)
+    {
+        notitext.text = s;
+    }
 }
